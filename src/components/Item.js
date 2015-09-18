@@ -6,20 +6,20 @@ export default class Item extends Component {
     super(props);
 
     this.checkItem = this.checkItem.bind(this);
-    this.state = {
-      done: false
-    };
   }
 
   checkItem() {
-    var currDone = this.state.done;
-    this.setState({done: !currDone});
+    if (this.props.done) {
+      this.props.uncheckItem(this.props.id);
+    } else {
+      this.props.checkItem(this.props.id);
+    }
   }
 
   render() {
     var itemClasses = classnames(
       'Item',
-      {'Item--done': this.state.done}
+      {'Item--done': this.props.done}
     );
     return (
       <div className={itemClasses}>

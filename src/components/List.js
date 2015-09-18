@@ -1,7 +1,8 @@
-import React, {Component} from 'react';
+import React, {Component, PropTypes} from 'react';
+import {bindActionCreators} from 'redux';
 import {connect} from 'react-redux';
 import Item from 'components/Item';
-import uuid from 'node-uuid';
+import * as TodoActions from 'actions/TodoActions';
 
 class List extends Component {
   constructor(props) {
@@ -9,27 +10,27 @@ class List extends Component {
 
     this.renderItems = this.renderItems.bind(this);
     this.addItem = this.addItem.bind(this);
-    this.state = {
-      items: this.props.initialItems
-    };
   }
 
   createItem(text) {
-    return {id: uuid.v4(), text};
   }
 
   addItem() {
     var input = React.findDOMNode(this.refs.newItem);
-    var currItems = this.state.items;
-    currItems.push(this.createItem(input.value));
-    this.setState({items: currItems});
+    this.props.dispatch(TodoActions.add(input.value));
     input.value = '';
   }
 
   renderItems() {
-    return this.state.items.map((item, index) => {
+    var boundActions = bindActionCreators(TodoActions, this.props.dispatch);
+    return this.props.items.map((item, index) => {
       return (
-        <Item key={item.id} text={item.text} />
+        <Item
+          key={item.id}
+          id={item.id}
+          text={item.text}
+          done={item.done}
+          {...boundActions} />
       );
     });
   }
@@ -45,6 +46,10 @@ class List extends Component {
   }
 }
 
+List.propTypes = {
+  dispatch: PropTypes.func
+};
+
 export default connect(state => {
-  return {initialItems: state.todos.toJS()};
+  return {items: state.todos.toJS()};
 })(List);
