@@ -10,6 +10,8 @@
   "author": "Jonathan Lehman <jonathan.lehman91@gmail.com>",
   "license": "MIT",
   "dependencies": {
+    "classnames": "^2.1.3",
+    "node-uuid": "^1.4.3",
     "react": "^0.13.3",
     "react-redux": "^2.1.2",
     "redux": "^3.0.0"

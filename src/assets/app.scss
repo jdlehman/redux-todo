@@ -1,0 +1,13 @@
+.List {
+  border: 1px solid black;
+  padding: 1rem;
+  max-width: 500px;
+}
+
+.Item {
+  padding: 0.5rem;
+
+  &--done {
+    text-decoration: line-through;
+  }
+}
