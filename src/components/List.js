@@ -1,18 +1,16 @@
 import React, {Component} from 'react';
+import {connect} from 'react-redux';
 import Item from 'components/Item';
 import uuid from 'node-uuid';
 
-export default class List extends Component {
+class List extends Component {
   constructor(props) {
     super(props);
 
     this.renderItems = this.renderItems.bind(this);
     this.addItem = this.addItem.bind(this);
     this.state = {
-      items: [
-        {id: uuid.v4(), text: "Item 1"},
-        {id: uuid.v4(), text: "Item 2"}
-      ]
+      items: this.props.initialItems
     };
   }
 
@@ -46,3 +44,7 @@ export default class List extends Component {
     );
   }
 }
+
+export default connect(state => {
+  return {initialItems: state.todos.toJS()};
+})(List);
