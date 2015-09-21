@@ -1,37 +1,36 @@
 import React, {Component} from 'react';
 import Item from 'components/Item';
-import uuid from 'node-uuid';
+import {connect} from 'react-redux';
+import {bindActionCreators} from 'redux';
+import * as TodoActions from 'actions/TodoActions';
 
-export default class List extends Component {
+class List extends Component {
   constructor(props) {
     super(props);
 
     this.renderItems = this.renderItems.bind(this);
     this.addItem = this.addItem.bind(this);
-    this.state = {
-      items: [
-        {id: uuid.v4(), text: "Item 1"},
-        {id: uuid.v4(), text: "Item 2"}
-      ]
-    };
-  }
-
-  createItem(text) {
-    return {id: uuid.v4(), text};
   }
 
   addItem() {
     var input = React.findDOMNode(this.refs.newItem);
-    var currItems = this.state.items;
-    currItems.push(this.createItem(input.value));
-    this.setState({items: currItems});
+    var text = input.value;
+    var action = TodoActions.add(text);
+    this.props.dispatch(action);
     input.value = '';
   }
 
   renderItems() {
-    return this.state.items.map((item, index) => {
+    const boundActions = bindActionCreators(TodoActions, this.props.dispatch);
+    return this.props.items.map((item, index) => {
       return (
-        <Item key={item.id} text={item.text} />
+        <Item
+          key={item.id}
+          id={item.id}
+          text={item.text}
+          done={item.done}
+          check={boundActions.check}
+          uncheck={boundActions.uncheck} />
       );
     });
   }
@@ -46,3 +45,11 @@ export default class List extends Component {
     );
   }
 }
+
+const connectFunc = connect(state => {
+  return {items: state.todos.toJS()}
+});
+
+const NewList = connectFunc(List);
+
+export default NewList;
